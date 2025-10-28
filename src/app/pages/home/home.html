@@ -1,0 +1,84 @@
+<div class="home-container">
+  <!-- Page Title -->
+  <div class="page-header">
+    <h2>📊 Expense Dashboard</h2>
+  </div>
+
+  <!-- Monthly Summary Section -->
+  @if (monthlySummary !== null && monthlySummary !== undefined) {
+    <div class="summary-section">
+      <div class="summary-card">
+        <h3>📅 {{ monthlySummary.month }} {{ monthlySummary.year }}</h3>
+
+        <div class="summary-stats">
+          <div class="stat-item">
+            <span class="stat-label">Total Expenses</span>
+            <span class="stat-value">
+              ${{ monthlySummary.totalExpenses.toFixed(2) }}
+            </span>
+          </div>
+
+          <div class="stat-item">
+            <span class="stat-label">Number of Expenses</span>
+            <span class="stat-value">{{ monthlySummary.expenseCount }}</span>
+          </div>
+        </div>
+
+        <!-- Category Breakdown -->
+        @if (getCategoryBreakdownArray() && getCategoryBreakdownArray().length > 0) {
+          <div class="category-breakdown">
+            <h4>Category Breakdown</h4>
+            <div class="breakdown-items">
+              @for (item of getCategoryBreakdownArray(); track $index) {
+                <div class="breakdown-item">
+                  <span class="breakdown-category">{{ item.category }}</span>
+                  <span class="breakdown-amount">
+                    ${{ item.amount.toFixed(2) }}
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <label for="categoryFilter">Filter by Category:</label>
+    <select
+      id="categoryFilter"
+      [(ngModel)]="selectedCategory"
+      (change)="onCategoryChange(selectedCategory)"
+      class="filter-select"
+    >
+      @for (category of categories; track $index) {
+        <option [value]="category">{{ category }}</option>
+      }
+    </select>
+  </div>
+
+  <!-- Expenses Section -->
+  <div class="expenses-section">
+    <h3>All Expenses ({{ filteredExpenses.length || 0 }})</h3>
+
+    @if (!filteredExpenses || filteredExpenses.length === 0) {
+      <div class="no-expenses">
+        <p>📝 No expenses found. Start by adding your first expense!</p>
+        <button class="btn-primary" routerLink="/add-expense">
+          Add Expense
+        </button>
+      </div>
+    } @else {
+      <div class="expenses-list">
+        @for (expense of filteredExpenses; track $index) {
+          <app-expense-card
+            [expense]="expense"
+            (onDelete)="onDeleteExpense($event)"
+          ></app-expense-card>
+        }
+      </div>
+    }
+  </div>
+</div>
