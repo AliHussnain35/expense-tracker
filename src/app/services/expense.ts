@@ -1,5 +1,3 @@
-// src/app/services/expense.service.ts
-
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Expense, MonthlySummary } from '../models/expense.model';

@@ -1,4 +1,3 @@
-// src/app/pages/home/home.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ExpenseService } from '../../services/expense';
@@ -10,7 +9,7 @@ import { Expense, MonthlySummary } from '../../models/expense.model';
  */
 @Component({
   selector: 'app-home',
-  standalone: false, // using traditional NgModule setup
+  standalone: false,
   templateUrl: './home.html',
   styleUrls: ['./home.scss']
 })
@@ -48,7 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.expensesSubscription?.unsubscribe(); // Prevent memory leaks
+    this.expensesSubscription?.unsubscribe(); 
   }
 
   /** Load monthly summary data */

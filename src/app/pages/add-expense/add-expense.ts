@@ -1,14 +1,8 @@
-// src/app/pages/add-expense/add-expense.component.ts
-
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ExpenseService } from '../../services/expense';
 import { ExpenseCategory } from '../../models/expense.model';
 
-/**
- * Add Expense Component (Page)
- * Form to add new expenses
- */
 @Component({
   selector: 'app-add-expense',
   standalone: false,

@@ -1,5 +1,3 @@
-// src/app/compnents/header/header.component.ts
-
 import { Component } from '@angular/core';
 
 @Component({

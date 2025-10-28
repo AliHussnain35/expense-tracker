@@ -1,9 +1,3 @@
-// src/app/models/expense.model.ts
-
-/**
- * Expense Model Interface
- * Defines the structure of an expense object
- */
 export interface Expense {
   id: string;
   title: string;
@@ -13,14 +7,9 @@ export interface Expense {
   description?: string;
 }
 
-/**
- * Category types for expenses
- */
+
 export type ExpenseCategory = 'Food' | 'Transport' | 'Entertainment' | 'Bills' | 'Shopping' | 'Healthcare' | 'Other';
 
-/**
- * Monthly Summary Interface
- */
 export interface MonthlySummary {
   month: string;
   year: number;
