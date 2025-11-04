@@ -2,10 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Expense, MonthlySummary } from '../models/expense.model';
 
-/**
- * Expense Service
- * Handles all expense-related data operations and business logic
- */
 @Injectable({
   providedIn: 'root'
 })
@@ -21,10 +17,7 @@ export class ExpenseService {
     this.loadExpensesFromStorage();
   }
 
-  /**
-   * Get all expenses
-   * @returns Array of all expenses
-   */
+ 
   getExpenses(): Expense[] {
     return this.expensesSubject.value;
   }

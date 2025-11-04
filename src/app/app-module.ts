@@ -1,5 +1,3 @@
-// src/app/app.module.ts
-
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -18,10 +16,6 @@ import { ExpenseCardComponent } from './components/expense-card/expense-card';
 // Services
 import { ExpenseService } from './services/expense';
 
-/**
- * Main Application Module
- * Contains all declarations, imports, and providers for the app
- */
 @NgModule({
   declarations: [
     // Root Component
