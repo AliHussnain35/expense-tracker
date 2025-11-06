@@ -1,0 +1,205 @@
+<!-- src/app/pages/transactions/transactions.component.html -->
+
+<div class="transactions-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h2>💼 All Transactions</h2>
+    <p>Manage your income and expenses in one place</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-section">
+    <div class="summary-card income-card">
+      <div class="card-icon">💰</div>
+      <div class="card-content">
+        <p class="card-label">Total Income</p>
+        <p class="card-value">${{ summary.totalIncome.toFixed(2) }}</p>
+      </div>
+    </div>
+
+    <div class="summary-card expense-card">
+      <div class="card-icon">💸</div>
+      <div class="card-content">
+        <p class="card-label">Total Expenses</p>
+        <p class="card-value">${{ summary.totalExpenses.toFixed(2) }}</p>
+      </div>
+    </div>
+
+    <div class="summary-card balance-card" 
+         [class.positive]="summary.balance >= 0" 
+         [class.negative]="summary.balance < 0">
+      <div class="card-icon">{{ summary.balance >= 0 ? '✅' : '⚠️' }}</div>
+      <div class="card-content">
+        <p class="card-label">Balance</p>
+        <p class="card-value">${{ summary.balance.toFixed(2) }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-section">
+    <button class="btn-primary" (click)="toggleAddForm()">
+      {{ showAddForm ? '❌ Cancel' : '➕ Add Transaction' }}
+    </button>
+  </div>
+
+  <!-- Add Transaction Form -->
+  <div class="add-form-card" *ngIf="showAddForm">
+    <h3>Add New Transaction</h3>
+    <form #transactionForm="ngForm" (ngSubmit)="addTransaction()">
+      
+      <!-- Type Selection -->
+      <div class="form-group">
+        <label>Transaction Type <span class="required">*</span></label>
+        <div class="type-selector">
+          <label class="radio-label">
+            <input type="radio" name="type" value="expense" [(ngModel)]="newTransaction.type" required>
+            <span>💸 Expense</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="type" value="income" [(ngModel)]="newTransaction.type" required>
+            <span>💰 Income</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Title -->
+        <div class="form-group">
+          <label for="title">Title <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="title"
+            name="title"
+            [(ngModel)]="newTransaction.title"
+            placeholder="e.g., Monthly Salary"
+            required
+            class="form-input">
+        </div>
+
+        <!-- Amount -->
+        <div class="form-group">
+          <label for="amount">Amount <span class="required">*</span></label>
+          <input 
+            type="number" 
+            id="amount"
+            name="amount"
+            [(ngModel)]="newTransaction.amount"
+            placeholder="0.00"
+            min="0.01"
+            step="0.01"
+            required
+            class="form-input">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <!-- Category -->
+        <div class="form-group">
+          <label for="category">Category <span class="required">*</span></label>
+          <select 
+            id="category"
+            name="category"
+            [(ngModel)]="newTransaction.category"
+            required
+            class="form-input">
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+
+        <!-- Date -->
+        <div class="form-group">
+          <label for="date">Date <span class="required">*</span></label>
+          <input 
+            type="date" 
+            id="date"
+            name="date"
+            [(ngModel)]="newTransaction.date"
+            required
+            class="form-input">
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label for="description">Description (Optional)</label>
+        <textarea 
+          id="description"
+          name="description"
+          [(ngModel)]="newTransaction.description"
+          placeholder="Add notes..."
+          rows="3"
+          class="form-input">
+        </textarea>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="!transactionForm.valid">
+        Add Transaction
+      </button>
+    </form>
+  </div>
+
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <button 
+      class="filter-btn"
+      [class.active]="selectedFilter === 'all'"
+      (click)="onFilterChange('all')">
+      📊 All
+    </button>
+    <button 
+      class="filter-btn"
+      [class.active]="selectedFilter === 'income'"
+      (click)="onFilterChange('income')">
+      💰 Income
+    </button>
+    <button 
+      class="filter-btn"
+      [class.active]="selectedFilter === 'expense'"
+      (click)="onFilterChange('expense')">
+      💸 Expenses
+    </button>
+  </div>
+
+  <!-- Transactions List -->
+  <div class="transactions-section">
+    <h3>Transactions ({{ filteredTransactions.length }})</h3>
+
+    <!-- No transactions -->
+    <div class="no-transactions" *ngIf="filteredTransactions.length === 0">
+      <p>📝 No transactions found. Add your first transaction!</p>
+    </div>
+
+    <!-- Transaction items -->
+    <div class="transactions-list" *ngIf="filteredTransactions.length > 0">
+      <div 
+        *ngFor="let transaction of filteredTransactions" 
+        class="transaction-item"
+        [ngClass]="getTransactionClass(transaction.type)">
+        
+        <div class="transaction-icon">
+          {{ getTransactionIcon(transaction) }}
+        </div>
+
+        <div class="transaction-details">
+          <h4>{{ transaction.title }}</h4>
+          <p class="transaction-meta">
+            {{ transaction.category }} • {{ getFormattedDate(transaction.date) }}
+          </p>
+          <p class="transaction-description" *ngIf="transaction.description">
+            {{ transaction.description }}
+          </p>
+        </div>
+
+        <div class="transaction-actions">
+          <div class="transaction-amount" [class.income]="transaction.type === 'income'">
+            {{ transaction.type === 'income' ? '+' : '-' }}${{ transaction.amount.toFixed(2) }}
+          </div>
+          <button class="delete-btn" (click)="deleteTransaction(transaction.id)">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
